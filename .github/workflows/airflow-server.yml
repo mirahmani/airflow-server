@@ -23,13 +23,3 @@ jobs:
           port: 22
           source: "dags/"
           target: "/home/mira/airflow-server/dags"
-
-      - name: Restart Airflow Webserver
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.SERVER_IP }}
-          username: ${{ secrets.SERVER_USER }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          port: 22
-          script: |
-            docker-compose -f /home/mira/airflow-server/docker-compose.yml restart webserver
