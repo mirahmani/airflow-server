@@ -22,7 +22,7 @@ default_args = {
 dag = DAG('hello_world',
           default_args=default_args,
           description='A simple HelloWorld DAG',
-          schedule_interval=timedelta(days=1),
+          schedule_interval=timedelta(minutes=5),
           catchup=False,
           )
 
