@@ -6,6 +6,7 @@ on:
       - main
     paths:
       - 'dags/**'
+      - 'tests/**'
 
 jobs:
   deploy:
@@ -13,6 +14,18 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        
+      - name: Set up Python
+          uses: actions/setup-python@v2
+          with:
+            python-version: '3.x' # Adjust this to your project's Python version
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt # Adjust this command based on how you manage dependencies
+
+      - name: Run tests
+        run: pytest tests/
 
       - name: Copy DAG to Airflow Server
         uses: appleboy/scp-action@master
