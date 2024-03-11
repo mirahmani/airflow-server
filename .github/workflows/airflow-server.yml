@@ -22,7 +22,8 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install -r requirements.txt # Adjust this command based on how you manage dependencies
+          pip install -r requirements.txt
+          pip install pytest airflow
 
       - name: Run tests
         run: pytest tests/
