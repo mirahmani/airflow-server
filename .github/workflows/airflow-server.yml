@@ -24,6 +24,7 @@ jobs:
       - name: Install dependencies
         run: |
           pip install pytest apache-airflow
+          pip show apache-airflow
 
       - name: Run tests
         run: pytest tests/
