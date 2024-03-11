@@ -10,12 +10,12 @@ def dag_bag():
 
 def test_dag_loaded(dag_bag):
     """Check that the DAG file is correctly imported into the DagBag"""
-    assert 'example_dag' in dag_bag.dags
+    assert 'hello_world' in dag_bag.dags
     assert len(dag_bag.dags['hello_world'].tasks) > 0
 
 def test_task_dependencies(dag_bag):
-    """Check the task dependencies in the example_dag"""
-    dag = dag_bag.get_dag(dag_id='example_dag')
+    """Check the task dependencies in the hello_world"""
+    dag = dag_bag.get_dag(dag_id='hello_world')
     start_task = dag.get_task('start_task')
     hello_task = dag.get_task('hello_task')
     world_task = dag.get_task('world_task')
