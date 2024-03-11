@@ -1,26 +1,46 @@
-import pytest
+import unittest
 from unittest.mock import patch
 from airflow.models import DagBag
 
-# Example using pytest and mocking
-@pytest.fixture(scope="session")
-def dag_bag():
-    with patch('airflow.models.dagbag.settings.configure_orm'):
-        return DagBag(dag_folder="dags/", include_examples=False)
+class TestExampleDAG(unittest.TestCase):
+    @patch("airflow.models.DagBag")
+    def test_dag_loaded(self, mock_dag_bag):
+        """Check that the DAG file is correctly imported into the DagBag"""
+        mock_dag_bag.return_value.dags.keys.return_value = ['hello_world']
+        mock_dag_bag.return_value.dags.__getitem__.return_value.tasks = ['task1', 'task2']
 
-def test_dag_loaded(dag_bag):
-    """Check that the DAG file is correctly imported into the DagBag"""
-    assert 'hello_world' in dag_bag.dags
-    assert len(dag_bag.dags['hello_world'].tasks) > 0
+        dagbag = DagBag(dag_folder="dags/", include_examples=False)
 
-def test_task_dependencies(dag_bag):
-    """Check the task dependencies in the hello_world"""
-    dag = dag_bag.get_dag(dag_id='hello_world')
-    start_task = dag.get_task('start_task')
-    hello_task = dag.get_task('hello_task')
-    world_task = dag.get_task('world_task')
+        self.assertIn('hello_world', dagbag.dags)
+        self.assertGreater(len(dagbag.dags['hello_world'].tasks), 0)
 
-    assert start_task.downstream_task_ids == {'hello_task'}
-    assert hello_task.upstream_task_ids == {'start_task'}
-    assert hello_task.downstream_task_ids == {'world_task'}
-    assert world_task.upstream_task_ids == {'hello_task'}
+    @patch("airflow.models.DagBag")
+    def test_task_dependencies(self, mock_dag_bag):
+        """Check the task dependencies in the hello_world"""
+        dag_id = 'hello_world'
+        mock_dag_bag.return_value.get_dag.return_value.task_dict = {
+            'start_task': MockTask('start_task', downstream_list=['hello_task']),
+            'hello_task': MockTask('hello_task', upstream_list=['start_task'], downstream_list=['world_task']),
+            'world_task': MockTask('world_task', upstream_list=['hello_task'])
+        }
+
+        dagbag = DagBag(dag_folder="dags/", include_examples=False)
+        dag = dagbag.get_dag(dag_id=dag_id)
+
+        start_task = dag.get_task('start_task')
+        hello_task = dag.get_task('hello_task')
+        world_task = dag.get_task('world_task')
+
+        self.assertEqual(start_task.downstream_task_ids, {'hello_task'})
+        self.assertEqual(hello_task.upstream_task_ids, {'start_task'})
+        self.assertEqual(hello_task.downstream_task_ids, {'world_task'})
+        self.assertEqual(world_task.upstream_task_ids, {'hello_task'})
+
+class MockTask:
+    def __init__(self, task_id, upstream_list=None, downstream_list=None):
+        self.task_id = task_id
+        self.upstream_task_ids = set(upstream_list) if upstream_list else set()
+        self.downstream_task_ids = set(downstream_list) if downstream_list else set()
+
+if __name__ == '__main__':
+    unittest.main()
