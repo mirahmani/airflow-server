@@ -9,12 +9,12 @@ class TestExampleDAG(unittest.TestCase):
 
     def test_dag_loaded(self):
         """Check that the DAG file is correctly imported into the DagBag"""
-        self.assertIn('example_dag', self.dagbag.dags)
-        self.assertGreater(len(self.dagbag.dags['example_dag'].tasks), 0)
+        self.assertIn('dag_hello_world', self.dagbag.dags)
+        self.assertGreater(len(self.dagbag.dags['dag_hello_world'].tasks), 0)
 
     def test_task_dependencies(self):
         """Check the task dependencies in the example_dag"""
-        dag = self.dagbag.get_dag(dag_id='example_dag')
+        dag = self.dagbag.get_dag(dag_id='dag_hello_world')
         start_task = dag.get_task('start_task')
         hello_task = dag.get_task('hello_task')
         world_task = dag.get_task('world_task')
