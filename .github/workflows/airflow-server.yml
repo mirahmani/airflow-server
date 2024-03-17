@@ -23,7 +23,7 @@ jobs:
       - name: Set permissions for Airflow logs directory
         run: |
              TODAY=$(date +%Y-%m-%d)
-             sudo mkdir -p /opt/airflow/logs/scheduler/$TODAY && sudo chmod 777 /opt/airflow/logs/scheduler/$TODAY
+             sudo mkdir -p /opt/airflow/logs/scheduler/$TODAY && sudo chmod 777 /opt/airflow/logs/scheduler
 
       - name: Run unittests in Docker
         env:
