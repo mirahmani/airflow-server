@@ -8,6 +8,7 @@ on:
       - 'dags/**'
       - 'tests/**'
       - '.github/workflows/**'
+      - 'docker-compose.yaml'
 
 jobs:
   deploy:
@@ -28,6 +29,7 @@ jobs:
       - name: Run unittests in Docker
         run: |
              docker exec airflow-server_airflow-webserver_1 /bin/bash -c 'cd tests && python -m unittest discover tests'
+        
         # Adjust the above command based on how your Docker image is set up and how your tests are structured
 
       - name: Copy DAG to Airflow Server
