@@ -18,19 +18,25 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         
-      - name: Build Docker Image
-        run: docker-compose up -d
-          
+      # - name: Build Docker Image
+      #   run: docker-compose up -d
+      - name : Install Airflow for testing
+        run: pip install -r requirements.txt  
       
       - name: Set permissions for Airflow logs directory
         run: |
              TODAY=$(date +%Y-%m-%d)
              sudo mkdir -p /opt/airflow/logs/scheduler/$TODAY && sudo chmod 777 /opt/airflow/logs/scheduler
              whoami
-
-      - name: Run unittests in Docker
+      
+      - name : Run unittest
         run: |
-             docker exec airflow-server_airflow-webserver_1 /bin/bash -c 'cd tests && pwd &&python -m unittest test_hello_world.py'
+             cd tests
+             python -m unittest discover tests
+
+      # - name: Run unittests in Docker
+      #   run: |
+      #        docker exec airflow-server_airflow-webserver_1 /bin/bash -c 'cd tests && pwd &&python -m unittest test_hello_world.py'
         
         # Adjust the above command based on how your Docker image is set up and how your tests are structured
 
