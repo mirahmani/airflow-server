@@ -16,18 +16,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.8.x' # Adjust this to your project's Python version
+      - name: Build Docker Image
+        run: docker-compose up -d.
 
-      - name: Install dependencies
-        run: |
-          pip install pytest pytest-mock apache-airflow
-          pip show apache-airflow
-
-      - name: Run tests
-        run: python -m unittest discover tests
+      - name: Run unittests in Docker
+        run: docker exec airflow-server-airflow-webserver-1 /bin/sh -c "python -m unittest discover tests"
+        # Adjust the above command based on how your Docker image is set up and how your tests are structured
 
       - name: Copy DAG to Airflow Server
         uses: appleboy/scp-action@master
