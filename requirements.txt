@@ -1,6 +1,6 @@
 pytest
 Pillow>=8.0
-apache-airflow==2.3.0
+apache-airflow==2.8.1
 # Replace the version above with the specific version of Airflow you want to use.
 
 # Database backends (Uncomment the one you plan to use)
@@ -26,4 +26,4 @@ pendulum==2.1.2
 # Optional: Other common tools and libraries for data engineering tasks
 #pandas==1.3.4
 #numpy==1.21.4
-sqlalchemy==1.4.27
+sqlalchemy
