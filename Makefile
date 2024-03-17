@@ -8,4 +8,4 @@ down:
 	docker-compose down
 
 testing:
-	docker exec --user root airflow-server_airflow-webserver_1 /bin/bash -c 'cd tests && pwd &&python3 -m unittest discover'
+	docker exec --user root airflow-server-airflow-webserver-1 python3 -m unittest discover tests
