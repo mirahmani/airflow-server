@@ -114,8 +114,7 @@ services:
 
   airflow-webserver:
     <<: *airflow-common
-    #command: webserver
-    command: /bin/bash -c "pip install pytest && airflow webserver"
+    command: webserver
     ports:
       - "8080:8080"
     healthcheck:
@@ -242,7 +241,7 @@ services:
       _AIRFLOW_WWW_USER_CREATE: 'true'
       _AIRFLOW_WWW_USER_USERNAME: ${_AIRFLOW_WWW_USER_USERNAME:-airflow}
       _AIRFLOW_WWW_USER_PASSWORD: ${_AIRFLOW_WWW_USER_PASSWORD:-airflow}
-      _PIP_ADDITIONAL_REQUIREMENTS: ''
+      _PIP_ADDITIONAL_REQUIREMENTS: 'pytest'
     user: "0:0"
     volumes:
       - ${AIRFLOW_PROJ_DIR:-.}:/sources
