@@ -1,5 +1,6 @@
 import unittest
-from airflow.models import DagBag
+import DagBag
+#from airflow.models import DagBag
 
 class TestMySimpleDag(unittest.TestCase):
     """Test for my_simple_dag"""
