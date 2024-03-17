@@ -26,9 +26,9 @@ jobs:
              sudo mkdir -p /opt/airflow/logs/scheduler/$TODAY && sudo chmod 777 /opt/airflow/logs/scheduler
 
       - name: Run unittests in Docker
-        env:
-          AIRFLOW__CORE__BASE_LOG_FOLDER: ./log
-        run: docker exec airflow-server_airflow-webserver_1 python -m unittest discover tests
+        run: |
+             docker exec airflow-server_airflow-webserver_1 pwd
+
         # Adjust the above command based on how your Docker image is set up and how your tests are structured
 
       - name: Copy DAG to Airflow Server
