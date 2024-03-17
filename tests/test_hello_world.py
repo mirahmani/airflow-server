@@ -1,46 +1,40 @@
 import unittest
-from unittest.mock import patch
 from airflow.models import DagBag
 
-class TestExampleDAG(unittest.TestCase):
-    @patch("airflow.models.DagBag")
-    def test_dag_loaded(self, mock_dag_bag):
-        """Check that the DAG file is correctly imported into the DagBag"""
-        mock_dag_bag.return_value.dags.keys.return_value = ['hello_world']
-        mock_dag_bag.return_value.dags.__getitem__.return_value.tasks = ['task1', 'task2']
+class TestMySimpleDag(unittest.TestCase):
+    """Test for my_simple_dag"""
 
-        dagbag = DagBag(dag_folder="dags/", include_examples=False)
+    def setUp(self):
+        self.dagbag = DagBag()
 
-        self.assertIn('hello_world', dagbag.dags)
-        self.assertGreater(len(dagbag.dags['hello_world'].tasks), 0)
+    def test_dag_loaded(self):
+        """Check the DAG is in the DagBag"""
+        dag = self.dagbag.get_dag(dag_id='hello_world')
+        self.assertTrue(dag is not None, "DAG not found in DagBag")
 
-    @patch("airflow.models.DagBag")
-    def test_task_dependencies(self, mock_dag_bag):
-        """Check the task dependencies in the hello_world"""
-        dag_id = 'hello_world'
-        mock_dag_bag.return_value.get_dag.return_value.task_dict = {
-            'start_task': MockTask('start_task', downstream_list=['hello_task']),
-            'hello_task': MockTask('hello_task', upstream_list=['start_task'], downstream_list=['world_task']),
-            'world_task': MockTask('world_task', upstream_list=['hello_task'])
-        }
+    def test_task_count(self):
+        """Check the number of tasks in the DAG"""
+        dag = self.dagbag.get_dag(dag_id='hello_world')
+        self.assertEqual(len(dag.tasks), 3, "Wrong number of tasks in the DAG")
 
-        dagbag = DagBag(dag_folder="dags/", include_examples=False)
-        dag = dagbag.get_dag(dag_id=dag_id)
+    def test_contain_task(self):
+        """Check that a specific task is in the DAG"""
+        dag = self.dagbag.get_dag(dag_id='hello_world')
+        task_ids = list(map(lambda task: task.task_id, dag.tasks))
+        self.assertIn('start_task', task_ids, "Task not found in the DAG")
+        self.assertIn('hello_task', task_ids, "Task not found in the DAG")
+        self.assertIn('world_task', task_ids, "Task not found in the DAG")
 
-        start_task = dag.get_task('start_task')
+    def test_dependencies_of_my_simple_task(self):
+        """Check the dependencies of my_simple_task"""
+        dag = self.dagbag.get_dag(dag_id='hello_world')
         hello_task = dag.get_task('hello_task')
-        world_task = dag.get_task('world_task')
 
-        self.assertEqual(start_task.downstream_task_ids, {'hello_task'})
-        self.assertEqual(hello_task.upstream_task_ids, {'start_task'})
-        self.assertEqual(hello_task.downstream_task_ids, {'world_task'})
-        self.assertEqual(world_task.upstream_task_ids, {'hello_task'})
+        upstream_task_ids = list(map(lambda task: task.task_id, hello_task.upstream_list))
+        self.assertEqual(len(upstream_task_ids), 1, "hello_task has upstream dependencies")
 
-class MockTask:
-    def __init__(self, task_id, upstream_list=None, downstream_list=None):
-        self.task_id = task_id
-        self.upstream_task_ids = set(upstream_list) if upstream_list else set()
-        self.downstream_task_ids = set(downstream_list) if downstream_list else set()
+        downstream_task_ids = list(map(lambda task: task.task_id, hello_task.downstream_list))
+        self.assertEqual(len(downstream_task_ids), 1, "hello_task has downstream dependencies")
 
 if __name__ == '__main__':
     unittest.main()
