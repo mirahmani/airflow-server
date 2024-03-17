@@ -116,7 +116,7 @@ services:
   airflow-webserver:
     <<: *airflow-common
     #command: webserver
-    command: /bin/bash -c "pip install pytest && webserver"
+    command: /bin/bash -c "sudo chmod 777 /opt/airflow/logs/scheduler && webserver"
     ports:
       - "8080:8080"
     healthcheck:
