@@ -32,7 +32,8 @@ jobs:
       - name : Run unittest
         run: |
              cd tests
-             python -m unittest discover tests
+             pwd
+             python -m unittest test_hello_world.py
 
       # - name: Run unittests in Docker
       #   run: |
