@@ -18,9 +18,12 @@ jobs:
         
       - name: Build Docker Image
         run: docker-compose up -d
+          
       
       - name: Set permissions for Airflow logs directory
-        run: sudo mkdir -p /opt/airflow/logs && sudo chmod 777 /opt/airflow/logs
+        run: |
+             TODAY=$(date +%Y-%m-%d)
+             sudo mkdir -p /opt/airflow/logs/scheduler/$TODAY && sudo chmod 777 /opt/airflow/logs/scheduler/$TODAY
 
       - name: Run unittests in Docker
         env:
