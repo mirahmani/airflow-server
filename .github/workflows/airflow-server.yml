@@ -10,6 +10,7 @@ on:
       - '.github/workflows/**'
       - 'docker-compose.yaml'
       - 'requirements.txt'
+      - 'Makefile'
 
 jobs:
   deploy:
@@ -20,7 +21,7 @@ jobs:
       
       - name: Create airflow env
         run: make setup
-        
+
       - name: Run tests
         run: make testing
         
