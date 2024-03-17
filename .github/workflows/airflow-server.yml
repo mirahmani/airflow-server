@@ -23,6 +23,8 @@ jobs:
         run: docker ps
 
       - name: Run unittests in Docker
+        env:
+          AIRFLOW__CORE__BASE_LOG_FOLDER: ./log
         run: docker exec airflow-server_airflow-webserver_1 python -m unittest discover tests
         # Adjust the above command based on how your Docker image is set up and how your tests are structured
 
