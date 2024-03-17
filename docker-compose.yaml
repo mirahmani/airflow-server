@@ -114,7 +114,8 @@ services:
 
   airflow-webserver:
     <<: *airflow-common
-    command: webserver
+    #command: webserver
+    command: /bin/bash -c "pip install pytest && airflow webserver"
     ports:
       - "8080:8080"
     healthcheck:
