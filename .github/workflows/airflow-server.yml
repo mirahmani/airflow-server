@@ -19,8 +19,8 @@ jobs:
       - name: Build Docker Image
         run: docker-compose up -d
       
-      - name: Check running containters
-        run: docker ps
+      - name: Set permissions for Airflow logs directory
+        run: sudo mkdir -p /opt/airflow/logs && sudo chmod 777 /opt/airflow/logs
 
       - name: Run unittests in Docker
         env:
