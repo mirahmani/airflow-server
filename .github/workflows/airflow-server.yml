@@ -23,7 +23,7 @@ jobs:
         run: docker ps
 
       - name: Run unittests in Docker
-        run: docker exec airflow-server-airflow-webserver-1 python -m unittest discover tests
+        run: docker exec airflow-server_airflow-webserver_1 python -m unittest discover tests
         # Adjust the above command based on how your Docker image is set up and how your tests are structured
 
       - name: Copy DAG to Airflow Server
