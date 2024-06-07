@@ -2,8 +2,7 @@ setup:
 	docker-compose up -d --force-recreate --remove-orphans
 	docker exec airflow-server_airflow-webserver_1 pwd
 	docker exec airflow-server_airflow-webserver_1 ls -l
-	docker exec airflow-server_airflow-webserver_1 whoami
-	docker exec --user root airflow-server_airflow-webserver_1 airflow db init
+	docker exec airflow-server_airflow-webserver_1 docker ps
 	
 down:
 	docker-compose down
