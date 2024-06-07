@@ -19,8 +19,8 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
       
-      - name: Create airflow env
-        run: make setup
+      # - name: Create airflow env
+      #   run: make setup
 
       # - name: Run tests
       #  run: make testing
@@ -54,6 +54,7 @@ jobs:
           host: ${{ secrets.SERVER_IP }}
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
+
           port: 22
           source: "dags/"
           target: "/home/mira/airflow-server/dags"
